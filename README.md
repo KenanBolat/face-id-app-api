@@ -16,7 +16,7 @@ localhost:8000/api/docs
 
 ### Screen-shot 
 
-![alt text]https://github.com/KenanBolat/face-id-app-api/blob/main/faq/ss001.png?raw=true)
+![alt text](https://github.com/KenanBolat/face-id-app-api/blob/main/faq/ss001.png?raw=true)
 
 # faceid-app-api
 ## Notes 
