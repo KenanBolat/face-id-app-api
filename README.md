@@ -1,3 +1,23 @@
+# How to run 
+
+### ```build``` 
+```docker-compose -f docker-compose.yml up --build```
+
+### ```run``` 
+```docker-compose -f docker-compose.yml up -d```
+
+## ```Test```
+```docker-compose -f docker-compose.yml run --rm app sh -c "python manage.py test"```
+
+## ```Browser Test```
+
+localhost:8000/api/docs
+
+
+### Screen-shot 
+
+![alt text]https://github.com/KenanBolat/face-id-app-api/blob/main/faq/ss001.png?raw=true)
+
 # faceid-app-api
 ## Notes 
     - APIVIEW: 
