@@ -17,14 +17,3 @@ jobs:
         with:
           push: true
           tags: kenanbolat/faceid-api
-      - name : list contents
-        run : ls -ltr
-      - name : docker context
-        run : docker context create ecs myecs
-      - name : docker context use myecs
-        run : docker context use myecs
-      - name : docker compose up
-        run : docker compose up
-
-
-

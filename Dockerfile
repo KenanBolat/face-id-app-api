@@ -29,7 +29,8 @@ RUN python -m venv /py && \
     chown -R django-user:django-user /vol/* && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts/* && \
-    chown -R django-user:django-user /scripts/*
+    chown -R django-user:django-user /scripts/* \
+    chown -R django-user:django-user sqlite3.db \
 
 ENV PATH="/scripts:/py/bin:$PATH"
 
