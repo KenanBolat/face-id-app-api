@@ -4,6 +4,7 @@ LABEL maintainer='Kenan BOLAT'
 ENV PYTHONUNBUFFERED 1
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
+COPY ./sqlite3.db /app/sqlite3.db
 COPY ./scripts/run.sh /scripts/run.sh
 COPY ./app /app
 WORKDIR /app
@@ -30,7 +31,7 @@ RUN python -m venv /py && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts/* && \
     chown -R django-user:django-user /scripts/* \
-    chown -R django-user:django-user /sqlite3.db \
+    chown -R django-user:django-user /app/sqlite3.db \
 
 ENV PATH="/scripts:/py/bin:$PATH"
 
