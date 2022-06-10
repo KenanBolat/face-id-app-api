@@ -1,13 +1,9 @@
-version: "3.9"
-
 services:
   app:
-    image: 332696939752.dkr.ecr.us-east-1.amazonaws.com/faceid-api:latest
+    image: kenanbolat/faceid-api
+    build: .
     ports:
       - '8000:8000'
-    volumes:
-      - ./app/:/app
-      - ./dev-static-data:/vol/web
     command: >
       sh -c "python manage.py wait_for_db && 
              python manage.py migrate && 
