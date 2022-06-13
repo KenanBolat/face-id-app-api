@@ -29,7 +29,7 @@ services:
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=kalman
     ports:
-      - '54032:5432'
+      - 54032:5432
 
 volumes:
   dev-db-data:

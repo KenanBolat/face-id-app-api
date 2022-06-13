@@ -53,6 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     image = models.ImageField(null=True, blank=True)
+    blocked = models.BooleanField(null=True, blank=True)
 
     objects = UserManager()
 
