@@ -1,6 +1,9 @@
 ---
 name: aws-deploy
-on: [ push ]
+on:
+  push:
+    branches:
+      - fastapi
 
 jobs:
   deploy:
