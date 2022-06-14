@@ -28,7 +28,6 @@ class UserManager(BaseUserManager):
         """Create, save and return a new user. """
         if not email:
             raise ValueError('User must have an email address')
-
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self.db)
@@ -52,12 +51,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
-    image = models.ImageField(null=True, blank=True)
     blocked = models.BooleanField(null=True, blank=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Foreigner(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=200, null=True)
+    image = models.ImageField(default='default.jpg', upload_to=faceid_image_file_path)
+
+    def __str__(self):
+        return self.user.name
 
 
 class FaceID(models.Model):
@@ -67,7 +74,6 @@ class FaceID(models.Model):
         on_delete=models.CASCADE,
     )
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
     image = models.ImageField(null=True, upload_to=faceid_image_file_path)
 
     def __str__(self):

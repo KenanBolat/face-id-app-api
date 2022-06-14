@@ -32,7 +32,7 @@ urlpatterns = [
         url_name='api-schema'
     ), name='api-docs'),
     path('api/user/', include('user.urls')),
-    path('api/faceid/', include('faceid.urls')),
+    path('api/', include('faceid.urls')),
 ]
 
 if settings.DEBUG:
