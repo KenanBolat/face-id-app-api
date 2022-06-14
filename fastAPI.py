@@ -16,8 +16,8 @@ app.add_middleware(
 
 
 @app.get('/index')
-def hellow_world(name: str):
-    return f"Hello {name}!"
+def hellow_world():
+    return f"Hello World!"
 
 
 @app.post("/images")
