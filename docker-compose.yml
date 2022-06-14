@@ -3,7 +3,7 @@ version: "3.9"
 services:
   app:
     build:
-      context: fastAPI
+      context: .
     ports:
       - '8090:8090'
     command: >
