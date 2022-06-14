@@ -1,7 +1,7 @@
 services:
   app:
     image: kenanbolat/fast-face-compare
-    build: fastAPI/
+    build: fastAPI
     ports:
       - '8090:8090'
     command: >
