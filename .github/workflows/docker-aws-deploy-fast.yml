@@ -3,7 +3,7 @@ name: aws-deploy
 on:
   push:
     branches:
-      - fastapi
+      - main
 
 jobs:
   deploy:
