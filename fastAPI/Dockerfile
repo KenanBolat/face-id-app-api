@@ -1,4 +1,4 @@
-FROM python:3.9-alpine3.13
+FROM python:3.10
 LABEL maintainer='Kenan BOLAT'
 
 ENV PYTHONUNBUFFERED 1
@@ -7,21 +7,8 @@ COPY . /app
 WORKDIR /app
 EXPOSE 8090
 
-ARG DEV=false
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache jpeg-dev && \
-    apk add --update --no-cache --virtual .tmp-build-deps \
-            build-base musl-dev zlib zlib-dev linux-headers && \
-    /py/bin/pip install -r /tmp/requirements.txt && \
-    rm -rf /tmp && \
-    adduser \
-        --disabled-password \
-        --no-create-home \
-        fast-user && \
-    chown -R fast-user:fast-user /vol/* && \
-
-ENV PATH="/py/bin:$PATH"
-
-USER fast-user
-
+RUN apt-get update && apt-get install libgl1 -y
+RUN pip install --upgrade pip
+RUN pip install -r /tmp/requirements.txt
+RUN mkdir -p /root/.deepface/weights/
+RUN wget https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5 -P /root/.deepface/weights/

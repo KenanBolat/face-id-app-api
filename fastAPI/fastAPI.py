@@ -2,8 +2,14 @@ import uvicorn
 from deepface import DeepFace
 from fastapi import FastAPI, File, UploadFile
 from prediction import read_image, preprocess
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+        CORSMiddleware,
+        allow_origins=['*']
+    )
 
 
 @app.get('/index')
