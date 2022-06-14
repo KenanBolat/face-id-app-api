@@ -23,8 +23,8 @@ def hellow_world():
 @app.post("/images")
 async def images(img1: UploadFile = File(...), img2: UploadFile = File(...)):
     # **do something**
-    imgRead1 = read_image(await img1.read())
-    imgRead2 = read_image(await img2.read())
+    imgRead1 = read_image(img1.file.read())
+    imgRead2 = read_image(img2.file.read())
     preprocess1 = preprocess(imgRead1)
     preprocess2 = preprocess(imgRead2)
     # predictions= DeepFace.analyze(preprocess1)
