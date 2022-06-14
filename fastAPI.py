@@ -7,21 +7,24 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 app.add_middleware(
-        CORSMiddleware,
-        allow_origins=['*']
-    )
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 @app.get('/index')
-def hellow_world(name: str):
-    return f"Hello {name}!"
+def hellow_world():
+    return f"Hello World!"
 
 
 @app.post("/images")
 async def images(img1: UploadFile = File(...), img2: UploadFile = File(...)):
     # **do something**
-    imgRead1 = read_image(await img1.read())
-    imgRead2 = read_image(await img2.read())
+    imgRead1 = read_image(img1.file.read())
+    imgRead2 = read_image(img2.file.read())
     preprocess1 = preprocess(imgRead1)
     preprocess2 = preprocess(imgRead2)
     # predictions= DeepFace.analyze(preprocess1)
