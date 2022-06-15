@@ -1,6 +1,8 @@
 """
 Views for the faceid APIs.
 """
+import os.path
+
 from drf_spectacular.utils import (
     extend_schema_view,
     extend_schema,
@@ -19,6 +21,14 @@ from rest_framework.permissions import IsAuthenticated
 from core.models import (FaceID, Foreigner)
 
 from . import serializers
+from .serializers import ForeignerSerializer
+from django.conf import settings
+
+import uvicorn
+from deepface import DeepFace
+from .prediction import read_image, preprocess
+
+DOC_ROOT = settings.STATIC_ROOT
 
 
 class FaceIDViewSet(viewsets.ModelViewSet):
@@ -27,6 +37,7 @@ class FaceIDViewSet(viewsets.ModelViewSet):
     queryset = FaceID.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    profile_serializer = serializers.ForeignerSerializer
 
     def _params_to_ints(self, qs):
         """Convert a list of strings to integers."""
@@ -54,10 +65,38 @@ class FaceIDViewSet(viewsets.ModelViewSet):
     def upload_image(self, request, pk=None):
         """Upload an image to faceid."""
         faceid = self.get_object()
+        print(self.request.user)
+        print(self.request.user.name)
+
+        profile = Foreigner.objects.all()
+        p = profile.filter(user=self.request.user).order_by('-id')
+        s = ForeignerSerializer(p, many=True)
+        print("=="*5)
+        img1 = "/vol/web/media/uploads/faceid/" + s.data[0]['image'].split('/')[-1]
+        imgRead1 = read_image(img1)
+
+        print(img1)
+        print("==" * 5)
+        # imgRead1 = read_image(img1.read())
+        # print(imgRead1)
         serializers = self.get_serializer(faceid, data=request.data)
+
         if serializers.is_valid():
             serializers.save()
-            return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+            print("==" * 3)
+            img2 = os.path.join("/vol/web/media/uploads/faceid/", serializers.data['image'].split('/')[-1])
+            imgRead2 = read_image(img2)
+            print(img2)
+            print("==" * 3)
+            preprocess1 = preprocess(imgRead1)
+            preprocess2 = preprocess(imgRead2)
+            model_name = 'VGG-Face'
+            print(model_name)
+            result = DeepFace.verify(img1_path=preprocess1, img2_path=preprocess2, model_name=model_name)
+            print(str(result))
+            return Response(result, status=status.HTTP_200_OK)
 
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -89,6 +128,7 @@ class ForeignerViewSet(viewsets.ModelViewSet):
     @action(methods=['POST'], detail=True, url_path='upload_image')
     def upload_image(self, request, pk=None):
         """Upload an image to faceid."""
+
         foreigner = self.get_object()
         serializers = self.get_serializer(foreigner, data=request.data)
         if serializers.is_valid():
