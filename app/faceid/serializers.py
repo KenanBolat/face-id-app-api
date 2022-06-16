@@ -83,3 +83,4 @@ class ForeignerImageSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
         extra_kwargs = {'image': {'required': 'True'}}
 
+
