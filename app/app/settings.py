@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'http://ec2-52-58-16-118.eu-central-1.compute.amazonaws.com']
 ALLOWED_HOSTS.extend(
     filter(
         None, os.environ.get('ALLOWED_HOSTS', '').split(','),
