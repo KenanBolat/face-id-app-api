@@ -18,6 +18,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
       - name : Db check
-          run : docker-compose run --rm app sh -c "python manage.py wait_for_db"
+        run : docker-compose run --rm app sh -c "python manage.py wait_for_db"
       - name : Test
-          run : docker-compose run --rm app sh -c "python manage.py test"
+        run : docker-compose run --rm app sh -c "python manage.py test"
