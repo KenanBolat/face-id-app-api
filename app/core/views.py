@@ -65,6 +65,7 @@ def compare_view(request):
     path2 = default_storage.save('tmp/img2.png', ContentFile(request.FILES["image2"].read()))
     tmp_file2 = os.path.join(settings.MEDIA_ROOT, path2)
     print(tmp_file1)
+    print(tmp_file2)
     imgRead1 = read_image(tmp_file1)
     imgRead2 = read_image(tmp_file2)
     preprocess1 = preprocess(imgRead1)

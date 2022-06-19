@@ -35,6 +35,8 @@ ALLOWED_HOSTS.extend(
 
 # Application definitionUserAdmin
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -164,3 +166,4 @@ SPECTACULAR_SETTINGS = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880

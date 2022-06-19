@@ -1,0 +1,10 @@
+.git
+.gitignore
+__pycache__
+.github
+docker-compose.yml
+docker-compose-deploy-gcp.yml
+Dockerfile
+Makefile
+README.md
+.venv

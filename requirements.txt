@@ -9,3 +9,4 @@ tensorflow
 uvicorn
 deepface
 pillow
+gunicorn
