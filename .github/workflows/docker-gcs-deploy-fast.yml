@@ -14,7 +14,7 @@ jobs:
       PROJECT_ID: django-microservices-347306
     steps:
       - name: Checkout
-        uses: actions/chekcout@v2
+        uses: actions/checkout@v2
 
       - uses: google-github-actions/setup-gcloud@master
         with:
