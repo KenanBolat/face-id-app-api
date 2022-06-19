@@ -16,14 +16,13 @@ jobs:
       - name: Checkout
         uses: actions/chekcout@v2
 
-      - name: Setup gcloud CLI
-        uses: google-github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
           export_default_credentials: true
           project_id: ${{ env.PROJECT_ID }}
       - name: Build Docker Image
-        uses: docker build -t $IMAGE_NAME:latest .
+        run: docker build -t $IMAGE_NAME:latest .
       - name: Configure Docker Client
         run: |-
           gcloud auth configure-docker --quiet
