@@ -1,41 +1,29 @@
-version: "3.9"
+version: '3.9'
 
 services:
   app:
+    container_name: django-app
     build:
       context: .
-      args:
-        - DEV=true
     ports:
-      - '80:8000'
+      - 8000:8000
     volumes:
-      - ./app/:/app
-      - dev-static-data:/vol/web
-    command: >
-      sh -c "python manage.py wait_for_db && 
-             python manage.py migrate && 
-             python manage.py runserver 0.0.0.0:8000"
+      - ./app:/app
+      - ./creds.json:/secrets/creds.json
     environment:
-      - DB_HOST=db
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=kalman
-      - DEBUG=1
-    depends_on:
-      - db
+      - PORT=8000
+    env_file:
+      - ./.env
+    restart: always
 
-  db:
-    image: postgres:13-alpine
+# The proxy will help us connect to remote CloudSQL instance locally.
+# Make sure to turn off any VPNs for the proxy to work.
+  cloudsqlproxy:
+    container_name: cloudsql-proxy
+    image: gcr.io/cloudsql-docker/gce-proxy:1.19.1
     volumes:
-      - dev-db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=kalman
+      - ./creds.json:/secrets/cloudsql/creds.json
     ports:
-      - '54032:5432'
-
-volumes:
-  dev-db-data:
-  dev-static-data:
-
+      - 127.0.0.1:5432:5432
+    command: /cloud_sql_proxy -instances="django-microservices-347306:us-central1:face-post"=tcp:0.0.0.0:5432 -credential_file=/secrets/cloudsql/creds.json
+    restart: always

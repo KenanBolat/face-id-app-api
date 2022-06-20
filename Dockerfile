@@ -2,6 +2,7 @@ FROM python:3.9
 LABEL maintainer='Kenan BOLAT'
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 COPY ./app/sqlite3.db /app/sqlite3.db
@@ -27,11 +28,11 @@ RUN python -m venv /py && \
     chown -R django-user:django-user /scripts/*
 #
 RUN mkdir -p /home/django-user/.deepface/weights/
-RUN wget https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5 -P /home/django-user/.deepface/weights/
+#RUN wget https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5 -P /home/django-user/.deepface/weights/
 
 
 ENV PATH="/scripts:/py/bin:$PATH"
 
 USER django-user
 
-CMD ["run.sh"]
+CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 app.wsgi:application
