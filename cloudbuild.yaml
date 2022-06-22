@@ -1,5 +1,4 @@
 steps:
-  - timeout: 1800s
   # 0. Docker Build
   - name: gcr.io/cloud-builders/docker
     args:
