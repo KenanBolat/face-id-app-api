@@ -68,6 +68,7 @@ steps:
 
   # 5. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    timeout: 1200s
     args:
       - run
       - services
