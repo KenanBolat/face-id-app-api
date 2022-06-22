@@ -1,7 +1,6 @@
 steps:
   # 0. Docker Build
   - name: gcr.io/cloud-builders/docker
-    timeout: '1200s'
     args:
       - build
       - '--no-cache'
@@ -10,6 +9,7 @@ steps:
       - .
       - '-f'
       - Dockerfile
+    timeout: '1200s'
     id: Build
 
   # 1. Docker push to Google Artifact Registry
@@ -51,7 +51,6 @@ steps:
 
     # 4. Collect static
   - name: gcr.io/google-appengine/exec-wrapper
-    timeout: '1200s'
     args:
       - '-i'
       - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
@@ -64,6 +63,7 @@ steps:
       - 'manage.py'
       - 'collectstatic'
       - '--no-input'
+    timeout: '1200s'
     id: Collect static
 
   # 5. Deploy to Cloud Run
@@ -82,8 +82,8 @@ steps:
     timeout: '1200s'
     id: Deploy
     entrypoint: gcloud
-
 # Store images in Google Artifact Registry
+
 images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
 
