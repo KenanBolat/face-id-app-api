@@ -1,6 +1,7 @@
 steps:
   # 0. Docker Build
   - name: gcr.io/cloud-builders/docker
+    timeout: 1200s
     args:
       - build
       - '--no-cache'
@@ -9,7 +10,6 @@ steps:
       - .
       - '-f'
       - Dockerfile
-    timeout: 1200s
     id: Build
 
   # 1. Docker push to Google Artifact Registry
