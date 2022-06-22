@@ -9,14 +9,20 @@ steps:
       - .
       - '-f'
       - Dockerfile
+    timeout: 1200s
     id: Build
+  timeout: 1200s
+
 
   # 1. Docker push to Google Artifact Registry
   - name: gcr.io/cloud-builders/docker
     args:
       - push
       - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      timeout: 1200s
     id: Push
+  timeout: 1200s
+
 
   # 2. Make migrations
   - name: gcr.io/google-appengine/exec-wrapper
@@ -31,7 +37,10 @@ steps:
       - 'python'
       - 'manage.py'
       - 'makemigrations'
+      timeout: 1200s
     id: Make migrations
+  timeout: 1200s
+
 
   # 3. Migrate
   - name: gcr.io/google-appengine/exec-wrapper
@@ -46,7 +55,10 @@ steps:
       - 'python'
       - 'manage.py'
       - 'migrate'
+      timeout: 1200s
     id: Migrate
+  timeout: 1200s
+
 
     # 4. Collect static
   - name: gcr.io/google-appengine/exec-wrapper
@@ -63,7 +75,10 @@ steps:
       - 'manage.py'
       - 'collectstatic'
       - '--no-input'
+      timeout: 1200s
     id: Collect static
+  timeout: 1200s
+
 
   # 5. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -78,8 +93,10 @@ steps:
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
+      timeout: 1200s
     id: Deploy
     entrypoint: gcloud
+  timeout: 1200s
 
 # Store images in Google Artifact Registry
 images:
