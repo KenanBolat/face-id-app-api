@@ -9,6 +9,7 @@ steps:
       - .
       - '-f'
       - Dockerfile
+    timeout: '1600s'
     id: Build
 
   # 1. Docker push to Google Artifact Registry
@@ -53,7 +54,7 @@ steps:
     args:
       - '-i'
       - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-      - '-s'
+      - '-s'f
       - '${PROJECT_ID}:${_DEPLOY_REGION}:${_DB_INSTANCE}'
       - '-e'
       - 'SETTINGS_NAME=${_SECRET_SETTINGS_NAME}'
