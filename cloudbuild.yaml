@@ -9,7 +9,7 @@ steps:
       - .
       - '-f'
       - Dockerfile
-    timeout: '1600s'
+    timeout: 1200s
     id: Build
 
   # 1. Docker push to Google Artifact Registry
