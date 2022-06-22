@@ -10,7 +10,7 @@ steps:
       - '-f'
       - Dockerfile
     id: Build
-  timeout: '1200s'
+  - timeout: '1200s'
 
   # 1. Docker push to Google Artifact Registry
   - name: gcr.io/cloud-builders/docker
@@ -33,7 +33,7 @@ steps:
       - 'manage.py'
       - 'makemigrations'
     id: Make migrations
-  timeout: '1200s'
+  - timeout: '1200s'
 
 
     # 3. Migrate
@@ -50,7 +50,7 @@ steps:
       - 'manage.py'
       - 'migrate'
     id: Migrate
-  timeout: '1200s'
+  - timeout: '1200s'
 
 
     # 4. Collect static
@@ -68,7 +68,7 @@ steps:
       - 'collectstatic'
       - '--no-input'
     id: Collect static
-  timeout: '1200s'
+  - timeout: '1200s'
 
   # 5. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -85,7 +85,7 @@ steps:
       - '--quiet'
     id: Deploy
     entrypoint: gcloud
-  timeout: '1200s'
+  - timeout: '1200s'
 # Store images in Google Artifact Registry
 
 images:
