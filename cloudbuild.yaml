@@ -9,7 +9,7 @@ steps:
       - .
       - '-f'
       - Dockerfile
-    timeout: 1200s
+      - '&& gcloud config set app/cloud_build_timeout 1600'
     id: Build
   timeout: 1200s
 
@@ -19,7 +19,6 @@ steps:
     args:
       - push
       - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-      timeout: 1200s
     id: Push
   timeout: 1200s
 
@@ -37,7 +36,6 @@ steps:
       - 'python'
       - 'manage.py'
       - 'makemigrations'
-      timeout: 1200s
     id: Make migrations
   timeout: 1200s
 
@@ -55,14 +53,12 @@ steps:
       - 'python'
       - 'manage.py'
       - 'migrate'
-      timeout: 1200s
     id: Migrate
   timeout: 1200s
 
 
     # 4. Collect static
   - name: gcr.io/google-appengine/exec-wrapper
-    timeout: '1200s'
     args:
       - '-i'
       - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
@@ -75,7 +71,6 @@ steps:
       - 'manage.py'
       - 'collectstatic'
       - '--no-input'
-      timeout: 1200s
     id: Collect static
   timeout: 1200s
 
@@ -93,7 +88,6 @@ steps:
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
-      timeout: 1200s
     id: Deploy
     entrypoint: gcloud
   timeout: 1200s
