@@ -1,5 +1,5 @@
 runtime: python39
-entrypoint: gunicorn -b :$PORT --chdir app/ app.wsgi:application
+entrypoint: gunicorn -t 18000 --graceful-timeout 9000 -b :$PORT --chdir app/ app.wsgi:application
 
 handlers:
   - url: /static
