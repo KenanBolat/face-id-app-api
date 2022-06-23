@@ -85,7 +85,7 @@ steps:
     timeout: 1200s
     id: Deploy
     entrypoint: gcloud
-  timeout: 1200s
+  - timeout: 1200s
 
 # Store images in Google Artifact Registry
 images:
