@@ -12,5 +12,4 @@ def read_image(file):
 
 def preprocess(image):
     image = np.array(image)
-
     return image

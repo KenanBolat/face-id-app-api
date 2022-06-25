@@ -1,6 +1,7 @@
 """
 Views for the faceid APIs.
 """
+import io
 import os.path
 
 from drf_spectacular.utils import (
@@ -9,6 +10,7 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes
 )
+from google.cloud import storage
 
 from rest_framework import (viewsets, mixins, status)
 # mixins is required to add additional functionalities to views
@@ -65,29 +67,35 @@ class FaceIDViewSet(viewsets.ModelViewSet):
     def upload_image(self, request, pk=None):
         """Upload an image to faceid."""
         faceid = self.get_object()
-        print(self.request.user)
-        print(self.request.user.name)
+
+        client = storage.Client()
+        bucket = client.get_bucket('face_app_dev_bucket')
 
         profile = Foreigner.objects.all()
         p = profile.filter(user=self.request.user).order_by('-id')
         s = ForeignerSerializer(p, many=True)
         print("=="*5)
-        img1 = "/vol/web/media/uploads/faceid/" + s.data[0]['image'].split('/')[-1]
-        imgRead1 = read_image(img1)
+        img1 = "uploads/faceid/" + s.data[0]['image'].split('/')[-1]
+        blob1 = bucket.get_blob(img1).download_as_string()
+        bytes1 = io.BytesIO(blob1)
+        imgRead1 = read_image(bytes1)
+        preprocess1 = preprocess(imgRead1)
 
-        print(img1)
+
         print("==" * 5)
-        # imgRead1 = read_image(img1.read())
-        # print(imgRead1)
+
         serializers = self.get_serializer(faceid, data=request.data)
 
         if serializers.is_valid():
-            serializers.save()
-
-
             print("==" * 3)
-            img2 = os.path.join("/vol/web/media/uploads/faceid/", serializers.data['image'].split('/')[-1])
-            imgRead2 = read_image(img2)
+            print("==" * 3)
+            serializers.save()
+            print(serializers.data)
+            print("==" * 3)
+            img2 = os.path.join("uploads/faceid/", serializers.data['image'].split('/')[-1])
+            blob2 = bucket.get_blob(img2).download_as_string()
+            bytes2 = io.BytesIO(blob2)
+            imgRead2 = read_image(bytes2)
             print(img2)
             print("==" * 3)
             preprocess1 = preprocess(imgRead1)

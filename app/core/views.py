@@ -18,7 +18,8 @@ from faceid.prediction import read_image, preprocess
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.conf import settings
-
+from google.cloud import storage
+from google.cloud.storage import Blob
 
 from rest_framework import serializers
 
@@ -52,39 +53,28 @@ def compare_view(request):
     """Gets two separate image and  compares them."""
     print(request.FILES)
 
-    # c = Compare.objects.all()
-    # s = CompareSerializer(c, many=True)
-    # print("==" * 5)
-    # img1 = "/vol/web/media/uploads/faceid/" + s.data[0]['image'].split('/')[-1]
-    # imgRead1 = read_image(img1)
-
     print("==" * 5)
-    path = default_storage.save('img1.png', ContentFile(request.FILES["image1"].read()))
-    tmp_file1 = os.path.join(settings.MEDIA_ROOT, path)
-    print(path)
-    print(tmp_file1)
-    path2 = default_storage.save('img2.png', ContentFile(request.FILES["image2"].read()))
-    tmp_file2 = os.path.join(settings.MEDIA_ROOT, path2)
-    print(tmp_file1)
-    print(tmp_file2)
-    imgRead1 = read_image(tmp_file1)
-    imgRead2 = read_image(tmp_file2)
-    preprocess1 = preprocess(imgRead1)
-    preprocess2 = preprocess(imgRead2)
-    model_name = 'VGG-Face'
-    print(model_name)
-    print(imgRead1)
-    result = DeepFace.verify(img1_path=preprocess1, img2_path=preprocess2, model_name=model_name)
+    client = storage.Client()
+    bucket = client.get_bucket('face_app_dev_bucket')
 
-    #
-    # print(img1)
-    #
-    # with io.BytesIO() as output:
-    #     img1.save(output, format="PNG")
-    #     contents = output.getvalue()
-    # image1 = preprocess(read_image(img1))
-    # image2 = preprocess(read_image(BytesIO(request.FILES["image2"].read())))
-    # result = DeepFace.verify(img1_path=image1, img2_path=image2, model_name=model_name)
+    path = default_storage.save('img1.png', ContentFile(request.FILES["image1"].read()))
+
+    blob = bucket.get_blob(path).download_as_string()
+    bytes = io.BytesIO(blob)
+    im = read_image(bytes)
+    imgRead1 = read_image(bytes)
+    preprocess1 = preprocess(imgRead1)
+
+    path2 = default_storage.save('img2.png', ContentFile(request.FILES["image2"].read()))
+    print(path2)
+    blob2 = bucket.get_blob(path2).download_as_string()
+    bytes2 = io.BytesIO(blob2)
+    imgRead2 = read_image(bytes2)
+    preprocess2 = preprocess(imgRead2)
+
+    model_name = 'VGG-Face'
+    result = DeepFace.verify(img1_path=preprocess1, img2_path=preprocess2, model_name=model_name)
+    print(result)
 
     return Response(result)
 
