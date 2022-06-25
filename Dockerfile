@@ -28,7 +28,7 @@ RUN python -m venv /py && \
     chown -R django-user:django-user /scripts/*
 #
 RUN mkdir -p /home/django-user/.deepface/weights/
-#RUN wget https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5 -P /home/django-user/.deepface/weights/
+RUN wget https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5 -P /home/django-user/.deepface/weights/
 
 
 ENV PATH="/scripts:/py/bin:$PATH"

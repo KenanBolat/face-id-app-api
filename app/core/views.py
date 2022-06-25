@@ -59,10 +59,11 @@ def compare_view(request):
     # imgRead1 = read_image(img1)
 
     print("==" * 5)
-
-    path = default_storage.save('tmp/img1.png', ContentFile(request.FILES["image1"].read()))
+    path = default_storage.save('img1.png', ContentFile(request.FILES["image1"].read()))
     tmp_file1 = os.path.join(settings.MEDIA_ROOT, path)
-    path2 = default_storage.save('tmp/img2.png', ContentFile(request.FILES["image2"].read()))
+    print(path)
+    print(tmp_file1)
+    path2 = default_storage.save('img2.png', ContentFile(request.FILES["image2"].read()))
     tmp_file2 = os.path.join(settings.MEDIA_ROOT, path2)
     print(tmp_file1)
     print(tmp_file2)
@@ -71,6 +72,8 @@ def compare_view(request):
     preprocess1 = preprocess(imgRead1)
     preprocess2 = preprocess(imgRead2)
     model_name = 'VGG-Face'
+    print(model_name)
+    print(imgRead1)
     result = DeepFace.verify(img1_path=preprocess1, img2_path=preprocess2, model_name=model_name)
 
     #
