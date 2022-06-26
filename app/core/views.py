@@ -4,7 +4,6 @@ Core views for app.
 import io
 import os
 import uuid
-from io import BytesIO
 
 from deepface import DeepFace
 from rest_framework.decorators import api_view
@@ -17,9 +16,7 @@ from drf_spectacular.utils import (
 from faceid.prediction import read_image, preprocess
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-from django.conf import settings
 from google.cloud import storage
-from google.cloud.storage import Blob
 
 from rest_framework import serializers
 
@@ -46,7 +43,9 @@ class CompareSerializer(serializers.Serializer):
 
 
 @extend_schema_view(
-    post=extend_schema(description='post desc', request=CompareSerializer, responses=OpenApiTypes.UUID),
+    post=extend_schema(description='post desc',
+                       request=CompareSerializer,
+                       responses=OpenApiTypes.UUID),
 )
 @api_view(['POST'])
 def compare_view(request):
@@ -57,15 +56,16 @@ def compare_view(request):
     client = storage.Client()
     bucket = client.get_bucket('face_app_dev_bucket')
 
-    path = default_storage.save('img1.png', ContentFile(request.FILES["image1"].read()))
+    path = default_storage.save('img1.png',
+                                ContentFile(request.FILES["image1"].read()))
 
     blob = bucket.get_blob(path).download_as_string()
     bytes = io.BytesIO(blob)
-    im = read_image(bytes)
     imgRead1 = read_image(bytes)
     preprocess1 = preprocess(imgRead1)
 
-    path2 = default_storage.save('img2.png', ContentFile(request.FILES["image2"].read()))
+    path2 = default_storage.save('img2.png',
+                                 ContentFile(request.FILES["image2"].read()))
     print(path2)
     blob2 = bucket.get_blob(path2).download_as_string()
     bytes2 = io.BytesIO(blob2)
@@ -73,7 +73,9 @@ def compare_view(request):
     preprocess2 = preprocess(imgRead2)
 
     model_name = 'VGG-Face'
-    result = DeepFace.verify(img1_path=preprocess1, img2_path=preprocess2, model_name=model_name)
+    result = DeepFace.verify(img1_path=preprocess1,
+                             img2_path=preprocess2,
+                             model_name=model_name)
     print(result)
 
     return Response(result)

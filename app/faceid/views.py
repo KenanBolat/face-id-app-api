@@ -4,15 +4,9 @@ Views for the faceid APIs.
 import io
 import os.path
 
-from drf_spectacular.utils import (
-    extend_schema_view,
-    extend_schema,
-    OpenApiParameter,
-    OpenApiTypes
-)
 from google.cloud import storage
 
-from rest_framework import (viewsets, mixins, status)
+from rest_framework import (viewsets, status)
 # mixins is required to add additional functionalities to views
 
 from rest_framework.decorators import action
@@ -26,7 +20,6 @@ from . import serializers
 from .serializers import ForeignerSerializer
 from django.conf import settings
 
-import uvicorn
 from deepface import DeepFace
 from .prediction import read_image, preprocess
 
@@ -74,13 +67,11 @@ class FaceIDViewSet(viewsets.ModelViewSet):
         profile = Foreigner.objects.all()
         p = profile.filter(user=self.request.user).order_by('-id')
         s = ForeignerSerializer(p, many=True)
-        print("=="*5)
+        print("==" * 5)
         img1 = "uploads/faceid/" + s.data[0]['image'].split('/')[-1]
         blob1 = bucket.get_blob(img1).download_as_string()
         bytes1 = io.BytesIO(blob1)
         imgRead1 = read_image(bytes1)
-        preprocess1 = preprocess(imgRead1)
-
 
         print("==" * 5)
 
@@ -92,17 +83,20 @@ class FaceIDViewSet(viewsets.ModelViewSet):
             serializers.save()
             print(serializers.data)
             print("==" * 3)
-            img2 = os.path.join("uploads/faceid/", serializers.data['image'].split('/')[-1])
+            img2 = os.path.join("uploads/faceid/",
+                                serializers.data['image'].split('/')[-1])
             blob2 = bucket.get_blob(img2).download_as_string()
             bytes2 = io.BytesIO(blob2)
-            imgRead2 = read_image(bytes2)
+            img_read_2 = read_image(bytes2)
             print(img2)
             print("==" * 3)
             preprocess1 = preprocess(imgRead1)
-            preprocess2 = preprocess(imgRead2)
+            preprocess2 = preprocess(img_read_2)
             model_name = 'VGG-Face'
             print(model_name)
-            result = DeepFace.verify(img1_path=preprocess1, img2_path=preprocess2, model_name=model_name)
+            result = DeepFace.verify(img1_path=preprocess1,
+                                     img2_path=preprocess2,
+                                     model_name=model_name)
             print(str(result))
             return Response(result, status=status.HTTP_200_OK)
 

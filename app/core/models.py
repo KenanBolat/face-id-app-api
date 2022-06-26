@@ -61,7 +61,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Foreigner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=200, null=True)
-    image = models.ImageField(default='default.jpg', upload_to=faceid_image_file_path)
+    image = models.ImageField(default='default.jpg',
+                              upload_to=faceid_image_file_path)
 
     def __str__(self):
         return self.user.name

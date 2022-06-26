@@ -1,5 +1,4 @@
 from PIL import Image
-from io import BytesIO
 import numpy as np
 
 input_shape = (512, 512)
