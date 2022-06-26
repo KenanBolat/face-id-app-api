@@ -13,3 +13,4 @@ gunicorn
 django-environ
 google-cloud-secret-manager==2.6.0
 django-storages[google]==1.11.1
+django-debug-toolbar
