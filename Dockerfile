@@ -5,7 +5,6 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
-COPY ./app/sqlite3.db /app/sqlite3.db
 COPY ./scripts/run.sh /scripts/run.sh
 COPY ./app /app
 WORKDIR /app
